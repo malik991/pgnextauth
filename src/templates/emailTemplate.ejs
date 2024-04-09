@@ -1,0 +1,12 @@
+<!-- emailTemplate.ejs -->
+<p style="background-color: brown; color: black; font-size: x-large">
+  Click
+  <a
+    style="color: rebeccapurple; text-underline-position: below"
+    href="<%= domain %>/verifyemail?token=<%= hashedToken %>"
+    >here</a
+  >
+  to <%= emailType === "VERIFY" ? 'verify your email' : 'reset your password' %>
+  or copy and paste the link below in your browser. <br />
+  <%= domain %>/verifyemail?token=<%= hashedToken %>
+</p>

@@ -1,8 +1,10 @@
 //import { dbConnect } from "@/dbConnection/dbConfig";
+//import db from "@/dbConnection/dbConfig";
 import pool from "@/dbConnection/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-//import db from "@/dbConnection/dbConfig";
+import { sendEmail } from "@/utils/mailer";
+import { emailInterface } from "@/utils/interfaces";
 
 //dbConnect();
 
@@ -10,7 +12,6 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { userName, email, password } = reqBody;
-    console.log("usrname: ", userName);
     if (!userName && !email && !password) {
       return NextResponse.json(
         { error: "all fields are mendatory" },
@@ -41,6 +42,12 @@ export async function POST(request: NextRequest) {
 
     if (newUser.rows.length === 1) {
       const insertedUser = newUser.rows[0];
+      const emailOptions: emailInterface = {
+        toEmail: insertedUser?.email,
+        emailType: "VERIFY",
+        userId: insertedUser?.id,
+      };
+      await sendEmail(emailOptions);
       return NextResponse.json({
         success: true,
         message: "User registered successfully",
